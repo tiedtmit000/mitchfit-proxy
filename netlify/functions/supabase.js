@@ -108,6 +108,20 @@ exports.handler = async function(event) {
       return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
     }
 
+    // ── AUTH: PASSWORD RESET ─────────────────────────────────
+    if (action === 'resetpassword') {
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/recover`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY
+        },
+        body: JSON.stringify({ email })
+      });
+      // Always return 200 — Supabase doesn't reveal if email exists
+      return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
+    }
+
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Unknown action' }) };
 
   } catch(err) {
