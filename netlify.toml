@@ -1,3 +1,13 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/anthropic"
+  to = "/.netlify/functions/anthropic"
+  status = 200
+
+[[redirects]]
+  from = "/api/supabase"
+  to = "/.netlify/functions/supabase"
+  status = 200
