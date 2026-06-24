@@ -94,6 +94,15 @@ exports.handler = async function(event) {
 
     // ── DATA: SAVE (upsert) ───────────────────────────────────
     if (action === 'save') {
+      // Decode user_id from JWT token payload (middle segment)
+      let user_id;
+      try {
+        const jwtPayload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+        user_id = jwtPayload.sub;
+      } catch(e) {
+        return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid token' }) };
+      }
+
       const res = await fetch(`${SUPABASE_URL}/rest/v1/user_data`, {
         method: 'POST',
         headers: {
@@ -103,6 +112,7 @@ exports.handler = async function(event) {
           'Prefer': 'resolution=merge-duplicates'
         },
         body: JSON.stringify({
+          user_id,
           payload,
           updated_at: new Date().toISOString()
         })
