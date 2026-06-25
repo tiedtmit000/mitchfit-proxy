@@ -62,6 +62,20 @@ exports.handler = async function(event) {
       return { statusCode: res.status, headers, body: JSON.stringify(result) };
     }
 
+    // ── AUTH: REFRESH TOKEN ──────────────────────────────────
+    if (action === 'refresh') {
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY
+        },
+        body: JSON.stringify({ refresh_token: body.refreshToken })
+      });
+      result = await res.json();
+      return { statusCode: res.status, headers, body: JSON.stringify(result) };
+    }
+
     // ── AUTH: SIGN OUT ────────────────────────────────────────
     if (action === 'signout') {
       const res = await fetch(`${SUPABASE_URL}/auth/v1/logout`, {
